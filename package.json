@@ -1,0 +1,19 @@
+{
+  "name": "projektba",
+  "version": "1.0.0",
+  "description": "Projekt iz predmeta Blockchain Aplikacije",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cabraja8/ProjektBA.git"
+  },
+  "author": "Ivan Čabraja",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Cabraja8/ProjektBA/issues"
+  },
+  "homepage": "https://github.com/Cabraja8/ProjektBA#readme"
+}
