@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-  <nav class="navbar bg-light navbar-light navbar-expand-lg">
+      <nav id="nav" class="navbar bg-light navbar-light navbar-expand-lg">
     <div class="container">
       <a class="navbar-brand" href="/">Your App Name</a>
 
@@ -20,11 +20,19 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
+           
+           <router-link to="/" class="nav-link"
+                 >Home</router-link
+               >
+         </li>
+         <li class="nav-item">
+           <router-link to="/about" class="nav-link"
+                 >About</router-link>
+         </li>
+         <li class="nav-item">
+           <router-link to="/Brackets" class="nav-link"
+                 >Brackets</router-link>
+         </li>
         </ul>
       </div>
     </div>
@@ -32,6 +40,42 @@
 </header>
 
 <router-view />
+
+<footer>
+      <div class="container">
+        <div class="row text-light bg-light text-center py-4 justify-content-center">
+          <div class="col-sm-10 col-md-8-col-lg-6">
+            <img src="" alt="" />
+            <p>"Gamers"</p>
+            <ul class="social pt-3">
+              <li>
+                <a href="https://www.facebook.com/" target="_blank"
+                  ><i class="fab fa-facebook"></i
+                ></a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/" target="_blank"
+                  ><i class="fab fa-instagram"></i
+                ></a>
+              </li>
+              <li>
+                <a href="https://twitter.com/" target="_blank"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+              </li>
+              <li>
+                <a href="https://www.youtube.com/" target="_blank"
+                  ><i class="fab fa-youtube"></i
+                ></a>
+              </li>
+            </ul>
+            <br />
+            <p>Radno vrijeme: 07:00h-23:00h</p>
+          </div>
+        </div>
+      </div>
+    </footer>
+
   </div>
 </template>
 
@@ -53,7 +97,7 @@
     color: #5b5555;
 
     &.router-link-exact-active {
-      color: hsl(153, 47%, 49%);
+      color: #4C9A7E;
     }
   }
 }

@@ -1,38 +1,38 @@
 <template>
   <div class="about">
-    <div class="container">
-    <h1>Bootstrap Table Example</h1>
-    <table class="table table-striped table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Match</th>
-            <th scope="col">Predicted Winner</th>
-            <th scope="col">Bet Amount</th>
-            <th scope="col">Potential Payout</th>
-            <th scope="col">Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td>Team A vs. Team B</td>
-            <td>Team A</td>
-            <td>10 ETH</td>
-            <td>18 ETH</td>
-            <td>Won</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Team C vs. Team D</td>
-            <td>Team D</td>
-            <td>15 ETH</td>
-            <td>27 ETH</td>
-            <td>Lost</td>
-          </tr>
-        
-        </tbody>
-      </table>
+  <div class="container mt-5">
+    <h1>About Us</h1>
+    <p>Welcome to our esports betting platform powered by blockchain technology. We are passionate about providing a secure and transparent betting experience for esports enthusiasts around the globe.</p>
+    
+    <h2>Our Mission</h2>
+    <p>Our mission is to revolutionize the esports betting industry by leveraging the power of blockchain technology to ensure fairness, transparency, and trustworthiness.</p>
+
+    <h2>Why Choose Us?</h2>
+    <ul>
+      <li>Secure and transparent betting platform</li>
+      <li>Instant transactions with blockchain technology</li>
+      <li>Wide range of esports events and tournaments to bet on</li>
+      <li>Dedicated customer support team</li>
+      <li>User-friendly interface</li>
+    </ul>
+
+    <h2>Contact Us</h2>
+    <p>If you have any questions or feedback, feel free to contact us:</p>
+    <ul>
+      <li>Email: info@yourbettingapp.com</li>
+      <li>Phone: +1234567890</li>
+    </ul>
   </div>
+
   </div>
 </template>
+
+<script>
+// @ is an alias to /src
+
+
+export default {
+  name: 'AboutView',
+ 
+}
+</script>
