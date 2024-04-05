@@ -7,7 +7,7 @@
 /* Top bar*/
 
 .top-bar {
-  background: #ed4646;
+  background: #247606;
   height: 2.8rem;
   padding: 0.5rem 0;
 }
@@ -32,10 +32,16 @@
   padding: 0.5rem;
 }
 
+.border-greenC {
+  border-color: #247606 !important; 
+  border-width: 3px; 
+  border-style: solid; 
+}
+
 
 .nav-link.active,
 .nav-link:hover {
-  color: #4C9A7E !important;
+  color: #247606 !important;
 }
 
 /*-- Fixed Background Image --*/
