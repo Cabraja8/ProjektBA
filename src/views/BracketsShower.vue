@@ -15,6 +15,9 @@
         </div>
       </div>
       
+      <div class="container mt-5 py-1">
+      
+      
       <div class="bracket-columns py-4">
         <!-- Quarter Finals -->
         <div class="bracket-column justify-content-center">
@@ -34,11 +37,14 @@
         <div class="bracket-column justify-content-center">
           <div class="bracket-round">
             <div class="bracket-matches">
+              <!-- Semi Finals Left Bracket -->
               <div v-for="(match, matchIndex) in tournamentRounds[1]" :key="matchIndex" class="bracket-match">
                 <div class="match-details">
-                  <p>{{ match.team1 }} vs. {{ match.team2 }}</p>
+                  <p v-if="semiFinalWinners[matchIndex]">{{ semiFinalWinners[matchIndex] }} (Winner)</p>
+                  <p v-else>{{ match.team1 }} vs. {{ match.team2 }}</p>
                 </div>
-                <div class="connector"></div> <!-- Connector line -->
+                <div class="connector-left"></div> <!-- Connector line -->
+                <div class="connector-right"></div> <!-- Connector line -->
               </div>
             </div>
           </div>
@@ -52,14 +58,14 @@
                 <div class="match-details">
                   <p>{{ match.team1 }} vs. {{ match.team2 }}</p>
                 </div>
+                <div class="connector-right"></div> <!-- Connector line -->
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Upcoming Matches -->
-      <h2>Upcoming Matches</h2>
+          <h2>Upcoming Matches</h2>
       <div class="brackets-table table-responsive">
         <table class="table table-striped">
           <thead class="thead-dark">
@@ -139,17 +145,14 @@
           </tbody>
         </table>
       </div>
+      </div>
     </div>
   </div>
 </template>
+
 <script>
-// @ is an alias to /src
-
-
 export default {
   name: 'BracketsShower',
-
-
   data() {
     return {
       tournamentRounds: [
@@ -170,10 +173,9 @@ export default {
           { team1: 'Winner SF1', team2: 'Winner SF2' }
         ]
       ],
-      quarterFinalWinners: ['Winner QF1', 'Winner QF2', 'Winner QF3', 'Winner QF4']
+      semiFinalWinners: ['Winner SF1', 'Winner SF2']
     };
   }
- 
 }
 </script>
 
@@ -255,6 +257,25 @@ export default {
       top: 50%; /* Position the connector line vertically in the middle */
       transform: translateY(-1px); /* Adjust vertical position for perfect alignment */
     }}
+
+
+    .connector-left,
+  .connector-right {
+    position: absolute;
+    top: 50%;
+    width: 50px; /* Adjust length of connector line */
+    height: 2px; /* Adjust thickness of connector line */
+    background-color: #000; /* Adjust color of connector line */
+    transform: translateY(-50%); /* Center the connector line vertically */
+  }
+  
+  .connector-left {
+    left: 100%; /* Position the connector line at the end of the left bracket */
+  }
+  
+  .connector-right {
+    right: 100%; /* Position the connector line at the end of the right bracket */
+  }
 
 </style>
 
