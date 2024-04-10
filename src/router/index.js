@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import BracketsShow from '../views/BracketsShower.vue'
 
+
 const routes = [
   {
     path: '/',
@@ -19,6 +20,7 @@ const routes = [
     name: 'brackets',
     component: BracketsShow
   }
+ 
 ]
 
 const router = createRouter({

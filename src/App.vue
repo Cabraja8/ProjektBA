@@ -30,6 +30,7 @@
               <li class="nav-item">
                 <router-link to="/Brackets" class="nav-link">Brackets</router-link>
               </li>
+           
             </ul>
           </div>
         </div>
@@ -75,6 +76,12 @@
   </div>
 </template>
 
+<script>
+
+
+
+</script>
+
 
 <style lang="scss">
 #app {
@@ -94,6 +101,8 @@
 
     &.router-link-exact-active {
       color: #247606;
+      font-size: 20px;
+      
     }
   }
 }

@@ -1,0 +1,271 @@
+<template>
+    <div class="brackets">
+        <div class="container mt-5 py-1">
+      <h1 class="h1 py-3">Tournament Bracket</h1>
+      <div class="tournament-container">
+      <div class="tournament-headers">
+        <h3>Round of 16</h3>
+        <h3>Quarter-Finals</h3>
+        <h3>Semi-Finals</h3>
+        <h3>Final</h3>
+        <h3>Winner</h3>
+      </div>
+      
+      <div class="tournament-brackets">
+        <ul class="bracket bracket-1">
+  <li class="team-item">{{ teams[0].name }} <time>{{ teams[0].time }}</time> {{ teams[1].name }}</li>
+  <li class="team-item">{{ teams[2].name }} <time>{{ teams[2].time }}</time> {{ teams[3].name }}</li>
+  <li class="team-item">{{ teams[4].name }} <time>{{ teams[4].time }}</time> {{ teams[5].name }}</li>
+  <li class="team-item">{{ teams[6].name }} <time>{{ teams[6].time }}</time> {{ teams[7].name }}</li>
+  <li class="team-item">{{ teams[8].name }} <time>{{ teams[8].time }}</time> {{ teams[9].name }}</li>
+  <li class="team-item">{{ teams[10].name }} <time>{{ teams[10].time }}</time> {{ teams[11].name }}</li>
+  <li class="team-item">{{ teams[12].name }} <time>{{ teams[12].time }}</time> {{ teams[13].name }}</li>
+  <li class="team-item">{{ teams[14].name }} <time>{{ teams[14].time }}</time> {{ teams[15].name }}</li>
+</ul>
+        <ul class="bracket bracket-2">
+          <li class="team-item">QF1 <time>20:00</time> QF2</li>
+          <li class="team-item">QF3 <time>20:00</time> QF4</li>
+          <li class="team-item">QF5 <time>20:00</time> QF6</li>
+          <li class="team-item">QF7 <time>20:00</time> QF8</li>
+        </ul>  
+        <ul class="bracket bracket-3">
+          <li class="team-item">SF1 <time>20:00</time> SF2</li>
+          <li class="team-item">SF3 <time>20:00</time> SF4</li>
+        </ul>  
+        <ul class="bracket bracket-4">
+          <li class="team-item">F1 <time>20:00</time> F2</li>
+        </ul>  
+      
+        <ul class="bracket bracket-5">
+          <li class="team-item">European Champions</li>
+        </ul>  
+      </div>
+      </div>
+        </div>
+        
+        <div class="container">
+          <h2 class="h2 py-3">ETH Betting Table</h2>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Bet Amount (ETH)</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(team, index) in teams" :key="index">
+              <td>{{ team.name }}</td>
+              <td>
+                <input type="number" v-model="team.betAmount" class="form-control">
+              </td>
+              <td>
+                <button @click="placeBet(team)" class="btn btn-primary">Place Bet</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+        
+    </div>
+</template>
+
+
+<script>
+
+
+export default {
+    name:"BracketList",
+
+    data() {
+    return {
+      teams: [
+  { name: "A2", betAmount: 0, time: "14:00" },
+  { name: "C2", betAmount: 0, time: "14:00" },
+  { name: "D1", betAmount: 0, time: "20:00" },
+  { name: "3BEF", betAmount: 0, time: "20:00" },
+  { name: "B1", betAmount: 0, time: "17:00" },
+  { name: "3ACD", betAmount: 0, time: "17:00" },
+  { name: "F1", betAmount: 0, time: "20:00" },
+  { name: "E2", betAmount: 0, time: "20:00" },
+  { name: "C1", betAmount: 0, time: "17:00" },
+  { name: "3ABF", betAmount: 0, time: "17:00" },
+  { name: "E1", betAmount: 0, time: "17:00" },
+  { name: "D2", betAmount: 0, time: "17:00" },
+  { name: "A1", betAmount: 0, time: "14:00" },
+  { name: "3CDE", betAmount: 0, time: "14:00" },
+  { name: "B2", betAmount: 0, time: "20:00" },
+  { name: "F2", betAmount: 0, time: "20:00" }
+]
+    };
+  },
+  methods: {
+    placeBet(team) {
+      // Perform actions when the bet is placed
+      console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
+      // You can add further logic here, like updating backend or showing a confirmation message
+    }
+  }
+}
+</script>
+
+
+<style>
+  html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  height: 100%;
+}
+
+.tournament-container {}
+
+.tournament-headers {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  border-bottom: 1px solid #ccc;
+  
+  h3 {
+    width: 25%;
+    text-align:center;
+    font-weight: 400;
+    border-right: 1px dashed #ccc;
+    margin: 0;
+    padding:1rem;
+  }
+}
+
+.tournament-brackets {
+  display: flex;
+  flex-direction: row; 
+  list-style-type: none;
+  background: #fdfdfd;
+  margin-bottom: 50px;
+}
+
+.bracket {
+  padding-left: 0;
+  display: flex;
+  margin: 0;
+  padding: 30px 0;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-around;
+  list-style-type: none;
+  border-right: 1px dashed #ccc;
+  flex: 1;
+}
+
+.team-item {
+  background-color: #f4f4f4;
+  padding: .5rem;
+  display: block;
+  margin: .5rem 10px;
+  position: relative;
+  vertical-align: middle;
+  color:white;
+  background-color: #212529;
+  outline: 2px solid #247606;
+  line-height: 2;
+  text-align: center;
+}
+
+.team-item:after {
+  content:'';
+  border-color: #247606;
+  border-width: 2px;
+  position: absolute;
+  display: block;
+  width: 10px;
+  right: -11px;
+}
+
+.team-item:nth-of-type(odd):after {
+  border-right-style: solid;
+  border-top-style: solid;
+  height: 100%;
+  top: 50%;
+}
+
+.team-item:nth-of-type(even):after {
+  border-right-style: solid;
+  border-bottom-style: solid;
+  height: 100%;
+  top: -50%;
+}
+
+.team-item:before {
+  content:'';
+  border-top: 2px solid #247606;
+  position: absolute;
+  height: 2px;
+  width: 10px;
+  left: -10px;
+  top: 50%;
+}
+
+.bracket-2 {
+  .team-item:nth-of-type(odd):after {
+    height: 200%;
+    top: 50%;
+  }
+  .team-item:nth-of-type(even):after {
+    height: 200%;
+    top: -150%;
+  }
+}
+
+.bracket-3 {
+  .team-item:nth-of-type(odd):after {
+    height: 350%;
+    top: 50%;
+  }
+  .team-item:nth-of-type(even):after {
+    height: 350%;
+    top: -300%;
+  }
+}
+
+.bracket-4 {
+  .team-item:nth-of-type(odd):after {
+    height: 700%;
+    top: 50%;
+  }
+  .team-item:nth-of-type(even):after {
+    height: 700%;
+    top: -650%;
+  }
+}
+
+.bracket:first-of-type {
+  .team-item:before {
+    display: none;
+  }
+}
+
+.bracket-4 {
+  .team-item:after {
+    display: none;
+  }
+}
+
+.bracket:last-of-type {
+  .team-item:before,
+  .team-item:after {
+    display: none;
+  }
+}
+
+.team-item time {
+  display: inline-block;
+  background-color: #247606;
+  font-size: .8rem;
+  padding: 0 .6rem;
+}
+</style>
