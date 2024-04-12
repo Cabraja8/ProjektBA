@@ -72,3 +72,23 @@
   transform: translateZ(0);
   will-change: transform;
 }
+
+.GradientBlackGreen{
+
+
+  background: #212529;
+background: linear-gradient(0deg, rgba(33,37,41,0.10547969187675066) 0%, rgba(36,118,6,1) 27%, #212529 60%, #212529 100%);
+}
+
+
+.GradientBlackGreenReverted
+{
+  background: rgb(33,37,41);
+  background: linear-gradient(180deg, rgba(33,37,41,0.10547969187675066) 0%, rgba(36,118,6,1) 27%, rgba(33,37,41,1) 60%, rgba(33,37,41,1) 100%);
+}
+
+
+.btnDarkGreen{
+background-color: #247606;
+color: white;
+}

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <nav id="nav" class="navbar bg-dark navbar-light navbar-expand-lg border-greenC px-3 py-2">
+      <nav id="nav" class="navbar bg-dark navbar-light navbar-expand-lg  px-3 py-2">
         <div class="container">
           <a class="navbar-brand" href="/"> 
             <img src="../src/assets/Logo2.png" alt="Level Up Bet Logo" class="logo ">
@@ -36,11 +36,28 @@
         </div>
       </nav>
     </header>
+    
+    <div class=" GradientBlackGreen">
+<br>
+<br>
+<br>
+<br>
+<br>
 
+    </div>
     <router-view />
 
+    <div class=" GradientBlackGreenReverted">
+<br>
+<br>
+<br>
+<br>
+<br>
+
+    </div>
+    
     <footer>
-  <div class="border-greenC bg-dark px-5 py-4">
+  <div class=" bg-dark px-5 py-4">
     <div class="container">
       <div class="row">
         <div class="col-md-4">

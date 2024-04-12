@@ -1,5 +1,7 @@
 <template>
     <div class="brackets">
+
+    
         <div class="container mt-5 py-1">
       <h1 class="h1 py-3">Tournament Bracket</h1>
       <div class="tournament-container">
@@ -43,42 +45,88 @@
       </div>
         </div>
         
-        <div class="container">
-          <h2 class="h2 py-3">ETH Betting Table</h2>
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Team</th>
-              <th>Bet Amount (ETH)</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(team, index) in teams" :key="index">
-              <td>{{ team.name }}</td>
-              <td>
-                <input type="number" v-model="team.betAmount" class="form-control">
-              </td>
-              <td>
-                <button @click="placeBet(team)" class="btn btn-primary">Place Bet</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+        <div class="container py-4" v-if="!connected">
+          <h2 class="h2 py-3">You need to connect your wallet for betting</h2>
+          <button  @click="connectWallet" class="btn btnDarkGreen">Connect Wallet</button>
+          <span ></span>
+        </div>
+        <div class="container py-4" v-else>
+          <p>Logged in as: {{ account }}</p>
+  <h2 class="h2 py-3">ETH Betting Table</h2>
+
+  <table class="table  ">
+    <thead class="thead-dark">
+      <tr>
+        <th>Team</th>
+        <th>Bet Amount (ETH)</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select v-model="selectedTeam">
+            <option v-for="(team, index) in teams" :key="index" :value="team">{{ team.name }}</option>
+          </select>
+        </td>
+        <td>
+          <input type="number" v-model="selectedTeam.betAmount" class="form-control">
+        </td>
+        <td>
+          <button @click="placeBet(selectedTeam)" class="btn btnDarkGreen">Place Bet</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
         
     </div>
 </template>
 
 
 <script>
-
+import { ref } from 'vue';
+import Web3 from 'web3';
 
 export default {
+
     name:"BracketList",
+
+    setup() {
+    const connected = ref(false);
+    const account = ref('');
+
+    const connectWallet = async () => {
+      if (window.ethereum) {
+        try {
+          // Request account access
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const web3 = new Web3(window.ethereum);
+          const accounts = await web3.eth.getAccounts();
+          if (accounts.length > 0) {
+            account.value = accounts[0];
+            connected.value = true;
+          } else {
+            // Handle case when no accounts are available
+            console.error('No accounts found');
+          }
+        } catch (error) {
+          // Handle error
+          console.error('Error connecting wallet:', error);
+        }
+      } else {
+        // Handle case when Metamask or other provider is not installed
+        console.error('Metamask not installed');
+      }
+    };
+
+    return { connected, account, connectWallet };
+  },
+
 
     data() {
     return {
+      selectedTeam: { name: "", betAmount: 0 },
       teams: [
   { name: "A2", betAmount: 0, time: "14:00" },
   { name: "C2", betAmount: 0, time: "14:00" },
@@ -268,4 +316,39 @@ body {
   font-size: .8rem;
   padding: 0 .6rem;
 }
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.btnDarkGreen{
+background-color: #247606;
+color: white;
+}
+.btnDarkGreen:hover{
+background-color: #41cc0f;
+color: white;
+}
+
+
+  select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+
+  input[type="number"] {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    input[type="number"] {
+      width: 50%; /* Set width to 50% on smaller screens */
+      font-size: 0.8rem; /* Adjust font size for smaller screens */
+    }
+  }
 </style>
