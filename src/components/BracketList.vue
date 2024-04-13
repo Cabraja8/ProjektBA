@@ -68,7 +68,7 @@
         </td>
       
         <td>
-          <button @click="MakeWinner(selectedTeam)" class="btn btnDarkGreen">Place Bet</button>
+          <button @click="MakeWinner(selectedTeam)" class="btn btnDarkGreen">Choose winner</button>
         </td>
       </tr>
     </tbody>

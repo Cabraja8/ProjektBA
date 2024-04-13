@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.21;
 
 import "./Ownable.sol";
 import "./ATM.sol";
+import "./console.sol";
 
 contract bet is ATM, Ownable {
 
