@@ -43,7 +43,39 @@
         </ul>  
       </div>
       </div>
+      
+
+
         </div>
+        <div class="container py-4">
+          
+  <h2 class="h2 py-3">Make winner</h2>
+
+  <table class="table  ">
+    <thead class="thead-dark">
+      <tr>
+        <th>Team</th>
+        
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select v-model="selectedTeam">
+            <option v-for="(team, index) in teams" :key="index" :value="team">{{ team.name }}</option>
+          </select>
+        </td>
+      
+        <td>
+          <button @click="MakeWinner(selectedTeam)" class="btn btnDarkGreen">Place Bet</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+        
         
         <div class="container py-4" v-if="!connected">
           <h2 class="h2 py-3">You need to connect your wallet for betting</h2>
@@ -87,10 +119,11 @@
 <script>
 import { ref } from 'vue';
 import Web3 from 'web3';
-
+import { bet } from '@/abis/bet.json';
 export default {
 
     name:"BracketList",
+    
 
     setup() {
     const connected = ref(false);
@@ -126,6 +159,9 @@ export default {
 
     data() {
     return {
+      acc: '',
+      loading: true,
+      Bet: null,
       selectedTeam: { name: "", betAmount: 0 },
       teams: [
   { name: "A2", betAmount: 0, time: "14:00" },
@@ -147,14 +183,74 @@ export default {
 ]
     };
   },
+  async created() {
+    await this.loadWeb3();
+   // await this.loadBlockchainData();
+   
+  },
   methods: {
     placeBet(team) {
-      // Perform actions when the bet is placed
-      console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
-      // You can add further logic here, like updating backend or showing a confirmation message
+    // Perform actions when the bet is placed
+    console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
+
+    const name = this.account; // Assuming this.account is defined elsewhere
+    const STeam = team.name; // Accessing the name property directly from the team object
+    const betAmount = window.web3.utils.toWei(team.betAmount.toString(), 'ether'); // Use lowercase 'ether'
+
+    console.log("Name:", name);
+    console.log("Team 1:", STeam);
+    console.log("Bet Amount:", betAmount);
+    // You can add further logic here, like updating backend or showing a confirmation message
+},  
+
+  MakeWinner(team){
+    console.log(team.name)
+
+  },
+
+    async loadWeb3() {
+      
+      if (window.ethereum) {
+        window.web3 = new Web3(window.ethereum);
+        await window.ethereum.enable();
+      } else if (window.web3) {
+        window.web3 = new Web3(window.web3.currentProvider);
+      } else {
+        window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!');
+      }
+    },
+    async loadBlockchainData() {
+      const web3 = window.web3;
+
+      const accounts = await web3.eth.getAccounts();
+      this.account = accounts[0];
+
+      const networkId = await web3.eth.net.getId();
+      const networkData = bet.networks[networkId];
+      if (networkData) {
+        const Bet = web3.eth.Contract(bet.abi, networkData.address);
+        console.log(networkData.address);
+        this.Bet = Bet;
+        this.loading = false;
+      } else {
+        window.alert("Bet contract not deployed to detected network");
+      }
+    },
+
+    async teamWinDistribution(teamId) {
+      this.loading = true;
+      const totalBets = await this.Bet.methods.totalBetMoney().call();
+      await this.Bet.methods.teamWinDistribution(teamId).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+      this.loading = false;
+    },
+    async createBet(name, teamId, betAmount) {
+      this.loading = true;
+      await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount });
+      this.loading = false;
     }
   }
-}
+  }
+
 </script>
 
 
