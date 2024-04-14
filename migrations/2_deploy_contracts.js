@@ -1,5 +1,5 @@
-const artifacts = require('truffle-artifacts');
-const bet = artifacts.require("bet.sol");
+// eslint-disable-next-line no-undef
+const bet = artifacts.require("bet");
 
 module.exports = function(deployer) {
   deployer.deploy(bet);

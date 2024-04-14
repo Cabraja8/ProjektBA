@@ -119,7 +119,7 @@
 <script>
 import { ref } from 'vue';
 import Web3 from 'web3';
-import { bet } from '@/abis/bet.json';
+//import { bet } from '@/abis/bet.json';
 export default {
 
     name:"BracketList",
@@ -184,8 +184,10 @@ export default {
     };
   },
   async created() {
+   
     await this.loadWeb3();
-   // await this.loadBlockchainData();
+    await this.loadBlockchainData();
+    
    
   },
   methods: {
@@ -224,17 +226,21 @@ export default {
 
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
-
       const networkId = await web3.eth.net.getId();
-      const networkData = bet.networks[networkId];
-      if (networkData) {
-        const Bet = web3.eth.Contract(bet.abi, networkData.address);
-        console.log(networkData.address);
-        this.Bet = Bet;
-        this.loading = false;
-      } else {
-        window.alert("Bet contract not deployed to detected network");
-      }
+      // console.log("networks", bet.networks[networkId]);
+      console.log(networkId)
+      console.log("account", this.account);
+      console.log("accounts", await web3.eth.getAccounts());
+      
+      // const networkData = bet.networks[networkId];
+      // if (networkData) {
+      //   const Bet = web3.eth.Contract(bet.abi, networkData.address);
+      //   console.log(networkData.address);
+      //   this.Bet = Bet;
+      //   this.loading = false;
+      // } else {
+      //   window.alert("Bet contract not deployed to detected network");
+      // }
     },
 
     async teamWinDistribution(teamId) {

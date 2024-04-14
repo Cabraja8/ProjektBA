@@ -48,7 +48,7 @@
 
 module.exports = {
   contracts_build_directory:"src/abis",
-  
+  contracts_directory: "src/contracts",
   /**
    * Networks define how you connect to your ethereum client and let you set the
    * defaults web3 uses to send transactions. If you don't specify one truffle
@@ -68,10 +68,11 @@ module.exports = {
     // options below to some value.
     //
     development: {
-    host: "127.0.0.1",    // Localhost (default: none)
-     port: 7545,            // Standard Ethereum port (default: none)
-     network_id: "5777",       // Any network (default: none)
-    },
+      host: "127.0.0.1",
+      port: 7545,
+      network_id: "5777",
+      gas: 6721975
+    }
     //
     // An additional network, but with some advanced options…
     // advanced: {
