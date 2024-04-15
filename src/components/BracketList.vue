@@ -62,13 +62,13 @@
     <tbody>
       <tr>
         <td>
-          <select v-model="selectedTeam">
+          <select v-model="WinningTeam">
             <option v-for="(team, index) in teams" :key="index" :value="team">{{ team.name }}</option>
           </select>
         </td>
       
         <td>
-          <button @click="MakeWinner(selectedTeam)" class="btn btnDarkGreen">Choose winner</button>
+          <button @click="MakeWinner(WinningTeam.name)" class="btn btnDarkGreen">Choose winner</button>
         </td>
       </tr>
     </tbody>
@@ -85,6 +85,16 @@
         <div class="container py-4" v-else>
           <p>Logged in as: {{ account }}</p>
   <h2 class="h2 py-3">ETH Betting Table</h2>
+
+  <main role="main" class="col-lg-12 d-flex">
+    <div v-if="loading" id="loader" class="text-center">
+      <p class="text-center">Loading...</p>
+    </div>
+    <div v-else>
+      <!-- Place your content here -->
+      <p>This is the content when not loading</p>
+    </div>
+  </main>
 
   <table class="table  ">
     <thead class="thead-dark">
@@ -119,7 +129,7 @@
 <script>
 import { ref } from 'vue';
 import Web3 from 'web3';
-//import { bet } from '@/abis/bet.json';
+import bet  from '@/abis/bet.json';
 export default {
 
     name:"BracketList",
@@ -162,31 +172,34 @@ export default {
       acc: '',
       loading: true,
       Bet: null,
+      WinningTeam:"",
       selectedTeam: { name: "", betAmount: 0 },
       teams: [
-  { name: "A2", betAmount: 0, time: "14:00" },
-  { name: "C2", betAmount: 0, time: "14:00" },
-  { name: "D1", betAmount: 0, time: "20:00" },
-  { name: "3BEF", betAmount: 0, time: "20:00" },
-  { name: "B1", betAmount: 0, time: "17:00" },
-  { name: "3ACD", betAmount: 0, time: "17:00" },
-  { name: "F1", betAmount: 0, time: "20:00" },
-  { name: "E2", betAmount: 0, time: "20:00" },
-  { name: "C1", betAmount: 0, time: "17:00" },
-  { name: "3ABF", betAmount: 0, time: "17:00" },
-  { name: "E1", betAmount: 0, time: "17:00" },
-  { name: "D2", betAmount: 0, time: "17:00" },
-  { name: "A1", betAmount: 0, time: "14:00" },
-  { name: "3CDE", betAmount: 0, time: "14:00" },
-  { name: "B2", betAmount: 0, time: "20:00" },
-  { name: "F2", betAmount: 0, time: "20:00" }
-]
+        { id: "1", name: "A2", betAmount: 0, time: "14:00" },
+        { id: "2", name: "C2", betAmount: 0, time: "14:00" },
+        { id: "3", name: "D1", betAmount: 0, time: "20:00" },
+        { id: "4", name: "3BEF", betAmount: 0, time: "20:00" },
+        { id: "5", name: "B1", betAmount: 0, time: "17:00" },
+        { id: "6", name: "3ACD", betAmount: 0, time: "17:00" },
+        { id: "7", name: "F1", betAmount: 0, time: "20:00" },
+        { id: "8", name: "E2", betAmount: 0, time: "20:00" },
+        { id: "9", name: "C1", betAmount: 0, time: "17:00" },
+        { id: "10", name: "3ABF", betAmount: 0, time: "17:00" },
+        { id: "11", name: "E1", betAmount: 0, time: "17:00" },
+        { id: "12", name: "D2", betAmount: 0, time: "17:00" },
+        { id: "13", name: "A1", betAmount: 0, time: "14:00" },
+        { id: "14", name: "3CDE", betAmount: 0, time: "14:00" },
+        { id: "15", name: "B2", betAmount: 0, time: "20:00" },
+        { id: "16", name: "F2", betAmount: 0, time: "20:00" }
+      ]
     };
   },
   async created() {
    
     await this.loadWeb3();
+
     await this.loadBlockchainData();
+    this.loading = false;
     
    
   },
@@ -196,19 +209,17 @@ export default {
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
     const name = this.account; // Assuming this.account is defined elsewhere
-    const STeam = team.name; // Accessing the name property directly from the team object
+    const STeam = team.id; // Accessing the name property directly from the team object
     const betAmount = window.web3.utils.toWei(team.betAmount.toString(), 'ether'); // Use lowercase 'ether'
 
     console.log("Name:", name);
     console.log("Team 1:", STeam);
     console.log("Bet Amount:", betAmount);
+    this.createBet(name,STeam,betAmount);
     // You can add further logic here, like updating backend or showing a confirmation message
 },  
 
-  MakeWinner(team){
-    console.log(team.name)
-
-  },
+ 
 
     async loadWeb3() {
       
@@ -227,28 +238,32 @@ export default {
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
       const networkId = await web3.eth.net.getId();
-      // console.log("networks", bet.networks[networkId]);
+       console.log("networks", bet.networks[networkId]);
+      console.log("networks", bet.networks);
       console.log(networkId)
       console.log("account", this.account);
       console.log("accounts", await web3.eth.getAccounts());
       
-      // const networkData = bet.networks[networkId];
-      // if (networkData) {
-      //   const Bet = web3.eth.Contract(bet.abi, networkData.address);
-      //   console.log(networkData.address);
-      //   this.Bet = Bet;
-      //   this.loading = false;
-      // } else {
-      //   window.alert("Bet contract not deployed to detected network");
-      // }
+      const networkData = bet.networks[networkId];
+  if (networkData) {
+    const Bet = new web3.eth.Contract(bet.abi, networkData.address); 
+    console.log(networkData.address);
+    this.Bet = Bet;
+    this.loading = false;
+  } else {
+    window.alert("Bet contract not deployed to detected network");
+  }
     },
 
-    async teamWinDistribution(teamId) {
-      this.loading = true;
+    async MakeWinner(teamId){
+    this.loading = true;
       const totalBets = await this.Bet.methods.totalBetMoney().call();
-      await this.Bet.methods.teamWinDistribution(teamId).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+      console.log(totalBets);
+      console.log(teamId);
+      await this.Bet.methods.teamWinDistribution(teamId.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
       this.loading = false;
-    },
+
+  },
     async createBet(name, teamId, betAmount) {
       this.loading = true;
       await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount });
