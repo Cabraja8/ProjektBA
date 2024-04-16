@@ -68,7 +68,7 @@
         </td>
       
         <td>
-          <button @click="MakeWinner(WinningTeam.name)" class="btn btnDarkGreen">Choose winner</button>
+          <button @click="MakeWinner(WinningTeam)" class="btn btnDarkGreen">Choose winner</button>
         </td>
       </tr>
     </tbody>
@@ -77,12 +77,12 @@
 
         
         
-        <div class="container py-4" v-if="!connected">
+        <!-- <div class="container py-4" v-if="!connected">
           <h2 class="h2 py-3">You need to connect your wallet for betting</h2>
           <button  @click="connectWallet" class="btn btnDarkGreen">Connect Wallet</button>
           <span ></span>
-        </div>
-        <div class="container py-4" v-else>
+        </div> -->
+        <div class="container py-4" >
           <p>Logged in as: {{ account }}</p>
   <h2 class="h2 py-3">ETH Betting Table</h2>
 
@@ -127,7 +127,7 @@
 
 
 <script>
-import { ref } from 'vue';
+//import { ref } from 'vue';
 import Web3 from 'web3';
 import bet  from '@/abis/bet.json';
 export default {
@@ -136,44 +136,45 @@ export default {
     
 
     setup() {
-    const connected = ref(false);
-    const account = ref('');
+    //const connected = ref(false);
+   // const account = ref('');
 
-    const connectWallet = async () => {
-      if (window.ethereum) {
-        try {
-          // Request account access
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const web3 = new Web3(window.ethereum);
-          const accounts = await web3.eth.getAccounts();
-          if (accounts.length > 0) {
-            account.value = accounts[0];
-            connected.value = true;
-          } else {
-            // Handle case when no accounts are available
-            console.error('No accounts found');
-          }
-        } catch (error) {
-          // Handle error
-          console.error('Error connecting wallet:', error);
-        }
-      } else {
-        // Handle case when Metamask or other provider is not installed
-        console.error('Metamask not installed');
-      }
-    };
+    // const connectWallet = async () => {
+    //   if (window.ethereum) {
+    //     try {
+    //       // Request account access
+    //       await window.ethereum.request({ method: 'eth_requestAccounts' });
+    //       const web3 = new Web3(window.ethereum);
+    //       const accounts = await web3.eth.getAccounts();
+    //       if (accounts.length > 0) {
+    //         account.value = accounts[0];
+    //         connected.value = true;
+    //       } else {
+    //         // Handle case when no accounts are available
+    //         console.error('No accounts found');
+    //       }
+    //     } catch (error) {
+    //       // Handle error
+    //       console.error('Error connecting wallet:', error);
+    //     }
+    //   } else {
+    //     // Handle case when Metamask or other provider is not installed
+    //     console.error('Metamask not installed');
+    //   }
+    // };
 
-    return { connected, account, connectWallet };
+    //return { connected }; // account, connectWallet
   },
 
 
     data() {
     return {
-      acc: '',
+      account: '',
+      totalBetMoney: 0,
       loading: true,
       Bet: null,
       WinningTeam:"",
-      selectedTeam: { name: "", betAmount: 0 },
+      selectedTeam: {id:"", name: "", betAmount: 0 },
       teams: [
         { id: "1", name: "A2", betAmount: 0, time: "14:00" },
         { id: "2", name: "C2", betAmount: 0, time: "14:00" },
@@ -195,30 +196,44 @@ export default {
     };
   },
   async created() {
-   
+    this.web3 = new Web3(window.web3.currentProvider);
     await this.loadWeb3();
-
     await this.loadBlockchainData();
+    await this.checkNodeSyncing();
     this.loading = false;
-    
+   
    
   },
   methods: {
-    placeBet(team) {
+   async placeBet(team) {
     // Perform actions when the bet is placed
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
     const name = this.account; // Assuming this.account is defined elsewhere
     const STeam = team.id; // Accessing the name property directly from the team object
     const betAmount = window.web3.utils.toWei(team.betAmount.toString(), 'ether'); // Use lowercase 'ether'
-
+    
     console.log("Name:", name);
     console.log("Team 1:", STeam);
     console.log("Bet Amount:", betAmount);
-    this.createBet(name,STeam,betAmount);
+    await this.createBet(name, STeam, betAmount);
     // You can add further logic here, like updating backend or showing a confirmation message
 },  
-
+async checkNodeSyncing() {
+      if (!this.web3) {
+        console.error('Web3 instance is not initialized.');
+        return;
+      }
+      
+      try {
+        const isSyncing = await this.web3.eth.isSyncing();
+        this.isSyncing = !!isSyncing;
+        console.log('Node is syncing:', this.isSyncing);
+      } catch (error) {
+        console.error('Error checking node syncing:', error);
+      }
+    },
+  
  
 
     async loadWeb3() {
@@ -226,6 +241,7 @@ export default {
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
         await window.ethereum.enable();
+       
       } else if (window.web3) {
         window.web3 = new Web3(window.web3.currentProvider);
       } else {
@@ -234,6 +250,7 @@ export default {
     },
     async loadBlockchainData() {
       const web3 = window.web3;
+      //let contract_address = "0xd789459aA51630eA34cDDadE645651B205E7434f";
 
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
@@ -244,28 +261,61 @@ export default {
       console.log("account", this.account);
       console.log("accounts", await web3.eth.getAccounts());
       
+//       const options = {
+//     gas: 5000000 // Specify the gas limit here
+// };
+      
       const networkData = bet.networks[networkId];
-  if (networkData) {
+      if (networkData) {
     const Bet = new web3.eth.Contract(bet.abi, networkData.address); 
-    console.log(networkData.address);
+    console.log(networkData.address, "network address ");
     this.Bet = Bet;
-    this.loading = false;
-  } else {
+    try {
+        // const totalBets = await Bet.methods.totalBetMoney().call();
+        // console.log(totalBets.toString());
+        // const team1Bets = await Bet.methods.getTotalBetAmount("0").call();
+        // const team2Bets = await Bet.methods.getTotalBetAmount("1").call();
+        // const owner = await Bet.methods.owner().call();
+        // console.log(owner.toString());
+        // console.log(team1Bets.toString());
+        // console.log(team2Bets.toString());
+        this.loading = false;
+    } catch (error) {
+        console.error('Error fetching total bets:', error);
+        
+    }
+} else {
     window.alert("Bet contract not deployed to detected network");
-  }
+}
     },
 
-    async MakeWinner(teamId){
-    this.loading = true;
-      const totalBets = await this.Bet.methods.totalBetMoney().call();
-      console.log(totalBets);
-      console.log(teamId);
-      await this.Bet.methods.teamWinDistribution(teamId.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
-      this.loading = false;
+    async MakeWinner(team) {
+    this.loading = true; 
+    console.log(team.id);
+    try {
+        var totalBets = await this.Bet.methods.totalBetMoney().call();
+        totalBets = Number(totalBets) ;
+        console.log(totalBets);
 
-  },
+        // await this.Bet.methods.teamWinDistribution(team.id).send({
+        //     from: this.account,
+        //     value: window.web3.utils.toBN(totalBets)
+        // }).once("receipt",(receipt)=>{
+        //   this.loading = false;
+        //   console.log(receipt);
+        // });
+
+        this.loading = false; 
+    } catch (error) {
+       
+        console.error("Error occurred while making winner:", error.message || error);
+        this.loading = false; 
+    }
+},
     async createBet(name, teamId, betAmount) {
+
       this.loading = true;
+      console.log(teamId)
       await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount });
       this.loading = false;
     }
