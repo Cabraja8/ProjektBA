@@ -213,7 +213,7 @@ export default {
    
   },
   methods: {
-    placeBet(team) {
+  async placeBet(team) {
     // Perform actions when the bet is placed
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
@@ -224,7 +224,13 @@ export default {
     console.log("Name:", name);
     console.log("Team 1:", STeam);
     console.log("Bet Amount:", betAmount);
-    this.createBet(name,STeam,betAmount);
+    try{
+      this.loading = true;
+      await this.Bet.methods.createBet(name, STeam).send({ from: this.account, value: betAmount }) 
+      this.loading = false;
+    }catch{(e)=>{
+      console.log(e);
+    }}
     // You can add further logic here, like updating backend or showing a confirmation message
 },  
 
@@ -291,33 +297,7 @@ if (networkData) {
 }
   }},
 
-  async MakeWinner(team) {
-  this.loading = true; 
-    console.log(await this.Bet.methods.totalBetMoney());
-  try {
-    // Call totalBetMoney() to get total bets
-    var totalBets = await this.Bet.methods.totalBetMoney().call();
-    totalBets = Number(totalBets);
-    console.log(totalBets);
-    // Call teamWinDistribution(teamId) and send transaction
-    await this.Bet.methods.teamWinDistribution(team.id).send({
-      from: this.account,
-      value: window.web3.utils.toBN(totalBets),
-      gas: 5000000 // Increase the gas limit as needed
-    })
-    .on('receipt', (receipt) => {
-      // Transaction receipt received
-      console.log(receipt);
-      this.loading = false; // Set loading to false
-    });
-  } catch (error) {
-    // Error occurred
-    console.error('Error executing teamWinDistribution:', error);
-    this.loading = false; // Set loading to false
-  }
-}
 
-  
     },
 
     async MakeWinner(teamId){
@@ -330,14 +310,7 @@ if (networkData) {
 
   },
 
-    async createBet(name, teamId, betAmount) {
-      this.loading = true;
-
-      console.log(teamId)
-      await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount }) 
-
-      this.loading = false;
-    },
+    
     transferOwnershipFun() {
   const newOwnerAddress = "0xcA3C11eeaf4C93cA415951fcB1c81D5ca3Dd8492"; // Address of the new owner
   this.transferOwnership(newOwnerAddress);
