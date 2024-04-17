@@ -195,7 +195,6 @@ export default {
     };
   },
   async created() {
-
     this.web3 = new Web3(window.web3.currentProvider);
     await this.loadWeb3();
     await this.loadBlockchainData();
@@ -204,16 +203,23 @@ export default {
   
 
    
+
     await this.loadWeb3();
 
     await this.loadBlockchainData();
     this.loading = false;
     
 
+
    
   },
   methods: {
-  async placeBet(team) {
+
+
+  
+ 
+    placeBet(team) {
+
     // Perform actions when the bet is placed
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
@@ -224,19 +230,26 @@ export default {
     console.log("Name:", name);
     console.log("Team 1:", STeam);
     console.log("Bet Amount:", betAmount);
-    try{
-      this.loading = true;
-      await this.Bet.methods.createBet(name, STeam).send({ from: this.account, value: betAmount }) 
-      this.loading = false;
-    }catch{(e)=>{
-      console.log(e);
-    }}
+
+
+   this.createBet(name,STeam,betAmount);
+
     // You can add further logic here, like updating backend or showing a confirmation message
 },  
+async createBet(name, teamId, betAmount) {
+      this.loading = true;
+      await this.Bet.methods.createBet(name, teamId).send({ from: name, value: betAmount }).on('receipt', (receipt) => {
+            console.log("Transaction receipt:", receipt);
+            this.loading = false; // Update loading state when receipt is received
+        });
+
+      this.loading = false;
+
+  },
 
  
 
-    async loadWeb3() {
+  async loadWeb3() {
       
       if (window.ethereum) {
         window.web3 = new Web3(window.ethereum);
@@ -249,10 +262,10 @@ export default {
     },
     async loadBlockchainData() {
 
+
       const web3 = new Web3(new Web3.providers.HttpProvider(`http://127.0.0.1:7545`));
       //let contract_address = "0xd789459aA51630eA34cDDadE645651B205E7434f";
 
-    
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
       
@@ -263,6 +276,7 @@ export default {
       console.log("account", this.account);
       console.log("accounts", await web3.eth.getAccounts());
       
+
 
 //       const options = {
 //     gas: 5000000 // Specify the gas limit here
@@ -295,9 +309,8 @@ if (networkData) {
 } else {
     window.alert("Bet contract not deployed to detected network");
 }
+
   }},
-
-
     },
 
     async MakeWinner(teamId){
@@ -306,29 +319,17 @@ if (networkData) {
       console.log(totalBets);
       console.log(teamId);
       await this.Bet.methods.teamWinDistribution(teamId.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+
       this.loading = false;
 
   },
+  
 
     
-    transferOwnershipFun() {
-  const newOwnerAddress = "0xcA3C11eeaf4C93cA415951fcB1c81D5ca3Dd8492"; // Address of the new owner
-  this.transferOwnership(newOwnerAddress);
-},
-    async transferOwnership(newOwnerAddress) {
-  try {
-    // Call transferOwnership function
-    await this.Bet.methods.transferOwnership(newOwnerAddress).send({
-      from: this.account // The current owner's address
-    });
-    console.log("Ownership transferred successfully.");
-  } catch (error) {
-    console.error("Error transferring ownership:", error);
-  }
-}
+  
   }
   
-  
+
 
 </script>
 
