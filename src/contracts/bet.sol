@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.11;
+pragma solidity 0.8.19;
 
 import "./Ownable.sol";
 import "./ATM.sol";
@@ -81,7 +81,7 @@ contract bet is ATM, Ownable {
         deposit();
         uint div;
                 
-        if (_teamId == 0) {
+        if (_teamId == 1) {
             for (uint i = 0; i < bets.length; i++) {
                 if (keccak256(abi.encodePacked((bets[i].teamBet.name))) == keccak256(abi.encodePacked("team1"))) {
                     address payable receiver = payable(bets[i].addy);

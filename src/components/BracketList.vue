@@ -201,7 +201,7 @@ export default {
     await this.loadBlockchainData();
     await this.checkNodeSyncing();
     this.loading = false;
-   
+  
    
   },
   methods: {
@@ -249,11 +249,11 @@ async checkNodeSyncing() {
       }
     },
     async loadBlockchainData() {
-      const web3 = window.web3;
+      const web3 = new Web3(new Web3.providers.HttpProvider(`http://127.0.0.1:7545`));
       //let contract_address = "0xd789459aA51630eA34cDDadE645651B205E7434f";
-
       const accounts = await web3.eth.getAccounts();
       this.account = accounts[0];
+      
       const networkId = await web3.eth.net.getId();
        console.log("networks", bet.networks[networkId]);
       console.log("networks", bet.networks);
@@ -265,61 +265,79 @@ async checkNodeSyncing() {
 //     gas: 5000000 // Specify the gas limit here
 // };
       
-      const networkData = bet.networks[networkId];
-      if (networkData) {
+const networkData = bet.networks[networkId];
+if (networkData) {
     const Bet = new web3.eth.Contract(bet.abi, networkData.address); 
     console.log(networkData.address, "network address ");
     this.Bet = Bet;
+    // console.log(await Bet.methods.isOwner(),"owner");
     try {
-        // const totalBets = await Bet.methods.totalBetMoney().call();
-        // console.log(totalBets.toString());
+      const totalBets = await Bet.methods.totalBetMoney().call();
+      console.log(totalBets.toString());
+        // const owner = await Bet.methods.owner().call(); 
+        // console.log("Owner:", owner); 
         // const team1Bets = await Bet.methods.getTotalBetAmount("0").call();
         // const team2Bets = await Bet.methods.getTotalBetAmount("1").call();
-        // const owner = await Bet.methods.owner().call();
-        // console.log(owner.toString());
-        // console.log(team1Bets.toString());
-        // console.log(team2Bets.toString());
+          // console.log(team1Bets.toString());
+          // console.log(team2Bets.toString());
         this.loading = false;
     } catch (error) {
-        console.error('Error fetching total bets:', error);
-        
+        console.error('Error fetching TotalBet Money:', error);
     }
 } else {
     window.alert("Bet contract not deployed to detected network");
 }
-    },
+  },
 
-    async MakeWinner(team) {
-    this.loading = true; 
-    console.log(team.id);
-    try {
-        var totalBets = await this.Bet.methods.totalBetMoney().call();
-        totalBets = Number(totalBets) ;
-        console.log(totalBets);
-
-        // await this.Bet.methods.teamWinDistribution(team.id).send({
-        //     from: this.account,
-        //     value: window.web3.utils.toBN(totalBets)
-        // }).once("receipt",(receipt)=>{
-        //   this.loading = false;
-        //   console.log(receipt);
-        // });
-
-        this.loading = false; 
-    } catch (error) {
-       
-        console.error("Error occurred while making winner:", error.message || error);
-        this.loading = false; 
-    }
+  async MakeWinner(team) {
+  this.loading = true; 
+    console.log(await this.Bet.methods.totalBetMoney());
+  try {
+    // Call totalBetMoney() to get total bets
+    var totalBets = await this.Bet.methods.totalBetMoney().call();
+    totalBets = Number(totalBets);
+    console.log(totalBets);
+    // Call teamWinDistribution(teamId) and send transaction
+    await this.Bet.methods.teamWinDistribution(team.id).send({
+      from: this.account,
+      value: window.web3.utils.toBN(totalBets),
+      gas: 5000000 // Increase the gas limit as needed
+    })
+    .on('receipt', (receipt) => {
+      // Transaction receipt received
+      console.log(receipt);
+      this.loading = false; // Set loading to false
+    });
+  } catch (error) {
+    // Error occurred
+    console.error('Error executing teamWinDistribution:', error);
+    this.loading = false; // Set loading to false
+  }
 },
     async createBet(name, teamId, betAmount) {
 
       this.loading = true;
       console.log(teamId)
-      await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount });
+      await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount }) 
       this.loading = false;
-    }
+    },
+    transferOwnershipFun() {
+  const newOwnerAddress = "0xcA3C11eeaf4C93cA415951fcB1c81D5ca3Dd8492"; // Address of the new owner
+  this.transferOwnership(newOwnerAddress);
+},
+    async transferOwnership(newOwnerAddress) {
+  try {
+    // Call transferOwnership function
+    await this.Bet.methods.transferOwnership(newOwnerAddress).send({
+      from: this.account // The current owner's address
+    });
+    console.log("Ownership transferred successfully.");
+  } catch (error) {
+    console.error("Error transferring ownership:", error);
   }
+}
+  }
+  
   }
 
 </script>
