@@ -68,7 +68,7 @@
         </td>
       
         <td>
-          <button @click="MakeWinner(WinningTeam.name)" class="btn btnDarkGreen">Choose winner</button>
+          <button @click="MakeWinner(WinningTeam)" class="btn btnDarkGreen">Choose winner</button>
         </td>
       </tr>
     </tbody>
@@ -77,12 +77,8 @@
 
         
         
-        <div class="container py-4" v-if="!connected">
-          <h2 class="h2 py-3">You need to connect your wallet for betting</h2>
-          <button  @click="connectWallet" class="btn btnDarkGreen">Connect Wallet</button>
-          <span ></span>
-        </div>
-        <div class="container py-4" v-else>
+       
+        <div class="container py-4">
           <p>Logged in as: {{ account }}</p>
   <h2 class="h2 py-3">ETH Betting Table</h2>
 
@@ -127,7 +123,7 @@
 
 
 <script>
-import { ref } from 'vue';
+
 import Web3 from 'web3';
 import bet  from '@/abis/bet.json';
 export default {
@@ -135,41 +131,10 @@ export default {
     name:"BracketList",
     
 
-    setup() {
-    const connected = ref(false);
-    const account = ref('');
-
-    const connectWallet = async () => {
-      if (window.ethereum) {
-        try {
-          // Request account access
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const web3 = new Web3(window.ethereum);
-          const accounts = await web3.eth.getAccounts();
-          if (accounts.length > 0) {
-            account.value = accounts[0];
-            connected.value = true;
-          } else {
-            // Handle case when no accounts are available
-            console.error('No accounts found');
-          }
-        } catch (error) {
-          // Handle error
-          console.error('Error connecting wallet:', error);
-        }
-      } else {
-        // Handle case when Metamask or other provider is not installed
-        console.error('Metamask not installed');
-      }
-    };
-
-    return { connected, account, connectWallet };
-  },
-
 
     data() {
     return {
-      acc: '',
+      account: '',
       loading: true,
       Bet: null,
       WinningTeam:"",
@@ -198,20 +163,7 @@ export default {
     this.web3 = new Web3(window.web3.currentProvider);
     await this.loadWeb3();
     await this.loadBlockchainData();
-   
-    this.loading = false;
-  
-
-   
-
-    await this.loadWeb3();
-
-    await this.loadBlockchainData();
-    this.loading = false;
-    
-
-
-   
+    this.loading = false;   
   },
   methods: {
 
@@ -238,13 +190,10 @@ export default {
 },  
 async createBet(name, teamId, betAmount) {
       this.loading = true;
-      await this.Bet.methods.createBet(name, teamId).send({ from: name, value: betAmount }).on('receipt', (receipt) => {
+      await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount }).on('receipt', (receipt) => {
             console.log("Transaction receipt:", receipt);
             this.loading = false; // Update loading state when receipt is received
         });
-
-      this.loading = false;
-
   },
 
  
@@ -261,64 +210,46 @@ async createBet(name, teamId, betAmount) {
       }
     },
     async loadBlockchainData() {
+  const web3 = window.web3;
 
+  try {
+    const accounts = await web3.eth.getAccounts();
+    this.account = accounts[0];
+   
+    const networkId = await web3.eth.net.getId();
+    const networkData = bet.networks[networkId];
+    if (networkData) {
+      const Bet = new web3.eth.Contract(bet.abi, networkData.address);
+      console.log(networkData.address);
+      this.Bet = Bet;
+      // const owner = await Bet.methods.owna().call()
+      // const totalBets = await Bet.methods.totalBetMoney().call()
+      // console.log(totalBets);
+      // const team1Bets = await Bet.methods.getTotalBetAmount("0").call()
+      // const team2Bets = await Bet.methods.getTotalBetAmount("1").call()
+      // console.log(owner.toString())
+      // console.log(totalBets.toString())
+      // console.log(team1Bets.toString())
+      // console.log(team2Bets.toString())
 
-      const web3 = new Web3(new Web3.providers.HttpProvider(`http://127.0.0.1:7545`));
-      //let contract_address = "0xd789459aA51630eA34cDDadE645651B205E7434f";
-
-      const accounts = await web3.eth.getAccounts();
-      this.account = accounts[0];
-      
-      const networkId = await web3.eth.net.getId();
-       console.log("networks", bet.networks[networkId]);
-      console.log("networks", bet.networks);
-      console.log(networkId)
-      console.log("account", this.account);
-      console.log("accounts", await web3.eth.getAccounts());
-      
-
-
-//       const options = {
-//     gas: 5000000 // Specify the gas limit here
-// };
-      
-const networkData = bet.networks[networkId];
-if (networkData) {
-
-      const networkData = bet.networks[networkId];
-  if (networkData) {
-
-    const Bet = new web3.eth.Contract(bet.abi, networkData.address); 
-    console.log(networkData.address);
-    this.Bet = Bet;
-
-    // console.log(await Bet.methods.isOwner(),"owner");
-    try {
-      const totalBets = await Bet.methods.totalBetMoney().call();
-      console.log(totalBets.toString());
-        // const owner = await Bet.methods.owner().call(); 
-        // console.log("Owner:", owner); 
-        // const team1Bets = await Bet.methods.getTotalBetAmount("0").call();
-        // const team2Bets = await Bet.methods.getTotalBetAmount("1").call();
-          // console.log(team1Bets.toString());
-          // console.log(team2Bets.toString());
-        this.loading = false;
-    } catch (error) {
-        console.error('Error fetching TotalBet Money:', error);
+      this.loading = false;
+    } else {
+      window.alert("Bet contract not deployed to detected network");
     }
-} else {
-    window.alert("Bet contract not deployed to detected network");
-}
+  } catch (error) {
+    console.error("Error loading blockchain data:", error);
+    // Handle error appropriately, e.g., display error message
+  }
+},
 
-  }},
-    },
-
-    async MakeWinner(teamId){
+    async MakeWinner(team){
     this.loading = true;
-      const totalBets = await this.Bet.methods.totalBetMoney().call();
-      console.log(totalBets);
-      console.log(teamId);
-      await this.Bet.methods.teamWinDistribution(teamId.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+    console.log(team.id);
+        const totalBets = await this.Bet.methods.totalBetMoney().call();
+        console.log(totalBets);
+
+      await this.Bet.methods.teamWinDistribution(team.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+     
 
       this.loading = false;
 
@@ -328,7 +259,7 @@ if (networkData) {
     
   
   }
-  
+}
 
 
 </script>
