@@ -175,9 +175,9 @@ export default {
     // Perform actions when the bet is placed
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
-    const name = this.account; // Assuming this.account is defined elsewhere
-    const STeam = team.id; // Accessing the name property directly from the team object
-    const betAmount = window.web3.utils.toWei(team.betAmount.toString(), 'ether'); // Use lowercase 'ether'
+    const name = this.account;
+    const STeam = team.id; 
+    const betAmount = window.web3.utils.toWei(team.betAmount.toString(), 'ether'); 
 
     console.log("Name:", name);
     console.log("Team 1:", STeam);
@@ -186,14 +186,21 @@ export default {
 
    this.createBet(name,STeam,betAmount);
 
-    // You can add further logic here, like updating backend or showing a confirmation message
+   
 },  
 async createBet(name, teamId, betAmount) {
       this.loading = true;
+      //let address = "0xb1ecb4a1c87e5d930369B29E08C6d8b9882ea28f"
+      const accounts = await window.ethereum.request({
+        
+        method: 'eth_requestAccounts',
+    });
+    console.log(accounts);
       await this.Bet.methods.createBet(name, teamId).send({ from: this.account, value: betAmount }).on('receipt', (receipt) => {
             console.log("Transaction receipt:", receipt);
-            this.loading = false; // Update loading state when receipt is received
+            this.loading = false; 
         });
+
   },
 
  
@@ -216,26 +223,31 @@ async createBet(name, teamId, betAmount) {
     const accounts = await web3.eth.getAccounts();
     this.account = accounts[0];
    
-    const networkId = await web3.eth.net.getId();
-    const networkData = bet.networks[networkId];
-    if (networkData) {
-      const Bet = new web3.eth.Contract(bet.abi, networkData.address);
-      console.log(networkData.address);
-      this.Bet = Bet;
-      // const owner = await Bet.methods.owna().call()
-      // const totalBets = await Bet.methods.totalBetMoney().call()
-      // console.log(totalBets);
-      // const team1Bets = await Bet.methods.getTotalBetAmount("0").call()
-      // const team2Bets = await Bet.methods.getTotalBetAmount("1").call()
-      // console.log(owner.toString())
-      // console.log(totalBets.toString())
-      // console.log(team1Bets.toString())
-      // console.log(team2Bets.toString())
+    // const networkId = await web3.eth.net.getId();
+    // const networkData = bet.networks[networkId];
+    let address = "0xb1ecb4a1c87e5d930369B29E08C6d8b9882ea28f"
+    
+    const Bet = new web3.eth.Contract(bet.abi, address  );
+    this.Bet = Bet;
+    // if (networkData) {
+    //   // const Bet = new web3.eth.Contract(bet.abi, networkData.address );
+    //   // console.log(networkData.address);
+    //   // this.Bet = Bet;
+    //   // console.log(networkData.address);
+    //   // const owner = await Bet.methods.owna().call()
+    //   // const totalBets = await Bet.methods.totalBetMoney().call()
+    //   // console.log(totalBets);
+    //   // const team1Bets = await Bet.methods.getTotalBetAmount("0").call()
+    //   // const team2Bets = await Bet.methods.getTotalBetAmount("1").call()
+    //   // console.log(owner.toString())
+    //   // console.log(totalBets.toString())
+    //   // console.log(team1Bets.toString())
+    //   // console.log(team2Bets.toString())
 
-      this.loading = false;
-    } else {
-      window.alert("Bet contract not deployed to detected network");
-    }
+    //   this.loading = false;
+    // } else {
+    //   window.alert("Bet contract not deployed to detected network");
+    // }
   } catch (error) {
     console.error("Error loading blockchain data:", error);
     // Handle error appropriately, e.g., display error message
@@ -248,7 +260,7 @@ async createBet(name, teamId, betAmount) {
         const totalBets = await this.Bet.methods.totalBetMoney().call();
         console.log(totalBets);
 
-      await this.Bet.methods.teamWinDistribution(team.id).send({ from: this.account, value: window.web3.utils.toBN(totalBets) });
+        await this.Bet.methods.teamWinDistribution(team.id).send({ from: this.account, value: totalBets });
      
 
       this.loading = false;
