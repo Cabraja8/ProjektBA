@@ -25,21 +25,21 @@
   <li class="team-item">{{ teams[14].name }} <time>{{ teams[14].time }}</time> {{ teams[15].name }}</li>
 </ul>
         <ul class="bracket bracket-2">
-          <li class="team-item">QF1 <time>20:00</time> QF2</li>
-          <li class="team-item">QF3 <time>20:00</time> QF4</li>
-          <li class="team-item">QF5 <time>20:00</time> QF6</li>
-          <li class="team-item">QF7 <time>20:00</time> QF8</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
         </ul>  
         <ul class="bracket bracket-3">
-          <li class="team-item">SF1 <time>20:00</time> SF2</li>
-          <li class="team-item">SF3 <time>20:00</time> SF4</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
         </ul>  
         <ul class="bracket bracket-4">
-          <li class="team-item">F1 <time>20:00</time> F2</li>
+          <li class="team-item">? <time>20:00</time> ?</li>
         </ul>  
       
         <ul class="bracket bracket-5">
-          <li class="team-item">European Champions</li>
+          <li class="team-item">?</li>
         </ul>  
       </div>
       </div>
@@ -62,7 +62,7 @@
     <tbody>
       <tr>
         <td>
-          <select v-model="WinningTeam">
+          <select v-model="WinningTeam" >
             <option v-for="(team, index) in teams" :key="index" :value="team">{{ team.name }}</option>
           </select>
         </td>
@@ -78,7 +78,7 @@
         
         
        
-        <div class="container py-4">
+        <div class="container py-4" >
           <p>Logged in as: {{ account }}</p>
   <h2 class="h2 py-3">ETH Betting Table</h2>
 
@@ -134,29 +134,30 @@ export default {
 
     data() {
     return {
+      IsOwner: false,
       account: '',
       loading: true,
       Bet: null,
       WinningTeam:"",
       selectedTeam: { name: "", betAmount: 0 },
-      teams: [
-        { id: "1", name: "A2", betAmount: 0, time: "14:00" },
-        { id: "2", name: "C2", betAmount: 0, time: "14:00" },
-        { id: "3", name: "D1", betAmount: 0, time: "20:00" },
-        { id: "4", name: "3BEF", betAmount: 0, time: "20:00" },
-        { id: "5", name: "B1", betAmount: 0, time: "17:00" },
-        { id: "6", name: "3ACD", betAmount: 0, time: "17:00" },
-        { id: "7", name: "F1", betAmount: 0, time: "20:00" },
-        { id: "8", name: "E2", betAmount: 0, time: "20:00" },
-        { id: "9", name: "C1", betAmount: 0, time: "17:00" },
-        { id: "10", name: "3ABF", betAmount: 0, time: "17:00" },
-        { id: "11", name: "E1", betAmount: 0, time: "17:00" },
-        { id: "12", name: "D2", betAmount: 0, time: "17:00" },
-        { id: "13", name: "A1", betAmount: 0, time: "14:00" },
-        { id: "14", name: "3CDE", betAmount: 0, time: "14:00" },
-        { id: "15", name: "B2", betAmount: 0, time: "20:00" },
-        { id: "16", name: "F2", betAmount: 0, time: "20:00" }
-      ]
+      teams : [
+    { id: "0", name: "Cloud9", betAmount: 0, time: "14:00" },
+    { id: "1", name: "Fnatic", betAmount: 0, time: "14:00" },
+    { id: "2", name: "Rogue", betAmount: 0, time: "20:00" },
+    { id: "3", name: "G2 Esports", betAmount: 0, time: "20:00" },
+    { id: "4", name: "T1", betAmount: 0, time: "17:00" },
+    { id: "5", name: "Gen.G", betAmount: 0, time: "17:00" },
+    { id: "6", name: "DWG KIA", betAmount: 0, time: "20:00" },
+    { id: "7", name: "EDward Gaming", betAmount: 0, time: "20:00" },
+    { id: "8", name: "Team Liquid", betAmount: 0, time: "17:00" },
+    { id: "9", name: "TSM", betAmount: 0, time: "17:00" },
+    { id: "10", name: "Invictus Gaming", betAmount: 0, time: "17:00" },
+    { id: "11", name: "Team WE", betAmount: 0, time: "17:00" },
+    { id: "12", name: "Misfits Gaming", betAmount: 0, time: "14:00" },
+    { id: "13", name: "Schalke 04 Esports", betAmount: 0, time: "14:00" },
+    { id: "14", name: "Origen", betAmount: 0, time: "20:00" },
+    { id: "15", name: "Vitality", betAmount: 0, time: "20:00" }
+]
     };
   },
   async created() {
@@ -164,6 +165,7 @@ export default {
     await this.loadWeb3();
     await this.loadBlockchainData();
     this.loading = false;   
+    this.IsOwner = await this.Bet.methods.isOwner().call();
   },
   methods: {
 
@@ -225,9 +227,9 @@ async createBet(name, teamId, betAmount) {
    
     // const networkId = await web3.eth.net.getId();
     // const networkData = bet.networks[networkId];
-    let address = "0xb1ecb4a1c87e5d930369B29E08C6d8b9882ea28f"
+    let address = "0x0c1F6D7179d8a15D0ac2a89969056FeA43dFF8BC"
     
-    const Bet = new web3.eth.Contract(bet.abi, address  );
+    const Bet = new web3.eth.Contract(bet.abi, address );
     this.Bet = Bet;
     // if (networkData) {
     //   // const Bet = new web3.eth.Contract(bet.abi, networkData.address );

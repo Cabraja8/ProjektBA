@@ -33,86 +33,81 @@ contract bet is ATM, Ownable {
 
     mapping (address => uint) public numBetsAddress;
 
-
     constructor() payable {
         conOwner = payable(msg.sender);
-        teams.push(Team("team1", 0));
-        teams.push(Team("team2", 0));
-
+        teams.push(Team("Cloud9", 0)); 
+        teams.push(Team("Fnatic", 0)); 
+        teams.push(Team("Rogue", 0)); 
+        teams.push(Team("G2 Esports", 0)); 
+        teams.push(Team("T1", 0)); 
+        teams.push(Team("Gen.G", 0)); 
+        teams.push(Team("DWG KIA", 0)); 
+        teams.push(Team("EDward Gaming", 0)); 
+        teams.push(Team("Team Liquid", 0)); 
+        teams.push(Team("TSM", 0)); 
+        teams.push(Team("Invictus Gaming", 0)); 
+        teams.push(Team("Team WE", 0)); 
+        teams.push(Team("Misfits Gaming", 0)); 
+        teams.push(Team("Schalke 04 Esports", 0)); 
+        teams.push(Team("Origen", 0)); 
+        teams.push(Team("Vitality", 0)); 
     }
 
-    function createTeam (string memory _name) public {
+    function createTeam(string memory _name) public {
         teams.push(Team(_name, 0));
     }
 
-    function getTotalBetAmount (uint _teamId) public view returns (uint) {
+    function getTotalBetAmount(uint _teamId) public view returns (uint) {
         return teams[_teamId].totalBetAmount;
     }
     
-    function createBet (string memory _name, uint _teamId) external payable {       
-        require (msg.sender != conOwner, "owner can't make a bet");
-        require (numBetsAddress[msg.sender] == 0, "you have already placed a bet");
-        require (msg.value > 0.01 ether, "bet more");
+    
+    function createBet(string memory _name, uint _teamId) external payable {       
+    require(msg.sender != conOwner, "Owner can't make a bet");
+    require(numBetsAddress[msg.sender] == 0, "You have already placed a bet");
+    require(_teamId < teams.length, "Invalid team ID");
+    require(msg.value > 0.01 ether, "Bet more");
 
-        deposit();
+    deposit();
 
-        bets.push(Bet(_name, msg.sender, msg.value, teams[_teamId]));
+    bets.push(Bet(_name, msg.sender, msg.value, teams[_teamId]));
 
-        if (_teamId == 0) {
-            teams[0].totalBetAmount += msg.value;
-        } 
-        if (_teamId == 1) {
-            teams[1].totalBetAmount += msg.value;
-        }
+    teams[_teamId].totalBetAmount += msg.value;
 
-        numBetsAddress[msg.sender]++;
-        
-        (bool sent, bytes memory data) = conOwner.call{value: msg.value}("");
-        require(sent, "Failed to send Ether");
+    numBetsAddress[msg.sender]++;
+    
+    (bool sent, bytes memory data) = conOwner.call{value: msg.value}("");
+    require(sent, "Failed to send Ether");
 
-        totalBetMoney += msg.value;
+    totalBetMoney += msg.value;
 
-        emit NewBet(msg.sender, msg.value, teams[_teamId]);
+    emit NewBet(msg.sender, msg.value, teams[_teamId]);
+}
 
-    }
+function teamWinDistribution(uint _teamId) public payable onlyOwner() {
+    require(_teamId < teams.length, "Invalid team ID");
 
-    function teamWinDistribution(uint _teamId) public payable onlyOwner() {
-        
-        deposit();
-        uint div;
-                
-        if (_teamId == 1) {
-            for (uint i = 0; i < bets.length; i++) {
-                if (keccak256(abi.encodePacked((bets[i].teamBet.name))) == keccak256(abi.encodePacked("team1"))) {
-                    address payable receiver = payable(bets[i].addy);
-                    console.log(receiver);
-                    div = (bets[i].amount * (10000 + (getTotalBetAmount(1) * 10000 / getTotalBetAmount(0)))) / 10000;
+    deposit();
+    uint div;
 
-                    (bool sent, bytes memory data) = receiver.call{ value: div }("");
-                    require(sent, "Failed to send Ether");
-                    
-                }
-            }
-        } else {
-            for (uint i = 0; i < bets.length; i++) {
-                if (keccak256(abi.encodePacked((bets[i].teamBet.name))) == keccak256(abi.encodePacked("team2"))) {
-                    address payable receiver = payable(bets[i].addy);
-                    div = (bets[i].amount * (10000 + (getTotalBetAmount(0) * 10000 / getTotalBetAmount(1)))) / 10000;
-                    console.log(getTotalBetAmount(0));
-                    console.log(div);
+    for (uint i = 0; i < bets.length; i++) {
+        if (keccak256(abi.encodePacked((bets[i].teamBet.name))) == keccak256(abi.encodePacked(teams[_teamId].name))) {
+            address payable receiver = payable(bets[i].addy);
+            div = (bets[i].amount * (10000 + (getTotalBetAmount(_teamId) * 10000 / totalBetMoney))) / 10000;
 
-                    (bool sent, bytes memory data) = receiver.call{ value: div }("");
-                    require(sent, "Failed to send Ether");
-                }
-            }
-        }
-
-        totalBetMoney = 0;
-        teams[0].totalBetAmount = 0;
-        teams[1].totalBetAmount = 0;
-
-        for (uint i = 0; i < bets.length; i++) {
-            numBetsAddress[bets[i].addy] = 0;
+            (bool sent, bytes memory data) = receiver.call{value: div}("");
+            require(sent, "Failed to send Ether");
         }
     }
+
+    totalBetMoney = 0;
+
+    for (uint i = 0; i < teams.length; i++) {
+        teams[i].totalBetAmount = 0;
+    }
+
+    for (uint i = 0; i < bets.length; i++) {
+        numBetsAddress[bets[i].addy] = 0;
+    }
+}
 }
