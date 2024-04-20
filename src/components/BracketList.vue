@@ -227,7 +227,7 @@ async createBet(name, teamId, betAmount) {
    
     // const networkId = await web3.eth.net.getId();
     // const networkData = bet.networks[networkId];
-    let address = "0x0c1F6D7179d8a15D0ac2a89969056FeA43dFF8BC"
+    let address = "0x1663b2b148f52A96617bF26bf7a9Cda98796Ee7f"
     
     const Bet = new web3.eth.Contract(bet.abi, address );
     this.Bet = Bet;
