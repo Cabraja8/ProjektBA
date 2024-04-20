@@ -47,7 +47,7 @@
 
 
         </div>
-        <div class="container py-4">
+        <div class="container py-4" v-if="IsOwner">
           
   <h2 class="h2 py-3">Make winner</h2>
 
@@ -78,21 +78,16 @@
         
         
        
-        <div class="container py-4" >
-          <p>Logged in as: {{ account }}</p>
-  <h2 class="h2 py-3">ETH Betting Table</h2>
+        <div class="container py-4" v-if="!IsOwner">
+      
+  <h2 class="h2 py-3" v-if="!loading">ETH Betting Table</h2>
 
-  <main role="main" class="col-lg-12 d-flex">
+  
     <div v-if="loading" id="loader" class="text-center">
       <p class="text-center">Loading...</p>
     </div>
-    <div v-else>
-      <!-- Place your content here -->
-      <p>This is the content when not loading</p>
-    </div>
-  </main>
-
-  <table class="table  ">
+  
+  <table class="table" v-if="!loading">
     <thead class="thead-dark">
       <tr>
         <th>Team</th>
@@ -164,14 +159,16 @@ export default {
     this.web3 = new Web3(window.web3.currentProvider);
     await this.loadWeb3();
     await this.loadBlockchainData();
+    this.CheckForOwner();
     this.loading = false;   
-    this.IsOwner = await this.Bet.methods.isOwner().call();
+    
+  },
+  mounted(){
+   
   },
   methods: {
 
 
-  
- 
     placeBet(team) {
 
     // Perform actions when the bet is placed
@@ -203,6 +200,16 @@ async createBet(name, teamId, betAmount) {
             this.loading = false; 
         });
 
+  },
+
+  CheckForOwner(){
+    if(this.account === "0xF556a6b4c523146a42384B129550C9bDDd8A0fDb"){
+      console.log("owner")
+      this.IsOwner = true;
+    }else{
+      console.log("not owner");
+      this.IsOwner = false;
+    }
   },
 
  
