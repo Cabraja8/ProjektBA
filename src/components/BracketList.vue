@@ -15,21 +15,15 @@
       
       <div class="tournament-brackets">
         <ul class="bracket bracket-1">
-  <li class="team-item">{{ teams[0].name }} <time>{{ teams[0].time }}</time> {{ teams[1].name }}</li>
-  <li class="team-item">{{ teams[2].name }} <time>{{ teams[2].time }}</time> {{ teams[3].name }}</li>
-  <li class="team-item">{{ teams[4].name }} <time>{{ teams[4].time }}</time> {{ teams[5].name }}</li>
-  <li class="team-item">{{ teams[6].name }} <time>{{ teams[6].time }}</time> {{ teams[7].name }}</li>
-  <li class="team-item">{{ teams[8].name }} <time>{{ teams[8].time }}</time> {{ teams[9].name }}</li>
-  <li class="team-item">{{ teams[10].name }} <time>{{ teams[10].time }}</time> {{ teams[11].name }}</li>
-  <li class="team-item">{{ teams[12].name }} <time>{{ teams[12].time }}</time> {{ teams[13].name }}</li>
-  <li class="team-item">{{ teams[14].name }} <time>{{ teams[14].time }}</time> {{ teams[15].name }}</li>
-</ul>
-        <ul class="bracket bracket-2">
-          <li class="team-item">? <time>20:00</time> ?</li>
-          <li class="team-item">? <time>20:00</time> ?</li>
-          <li class="team-item">? <time>20:00</time> ?</li>
-          <li class="team-item">? <time>20:00</time> ?</li>
-        </ul>  
+      <li class="team-item" v-for="(team, index) in teams.slice(0, 16)" :key="team.id" @click="selectTeam(team, 1)">
+        {{ team.name }} <time>{{ team.time }}</time> {{ teams[index + 1].name }}
+      </li>
+    </ul>
+    <ul class="bracket bracket-2">
+      <li class="team-item" v-for="(match, index) in quarterFinals1" :key="index">
+        <span v-for="team in match" :key="team.id">{{ team.name }} <time>20:00</time></span>
+      </li>
+    </ul>
         <ul class="bracket bracket-3">
           <li class="team-item">? <time>20:00</time> ?</li>
           <li class="team-item">? <time>20:00</time> ?</li>
@@ -78,7 +72,7 @@
         
         
        
-        <div class="container py-4" v-if="!IsOwner">
+<div class="container py-4" v-if="!IsOwner">
       
   <h2 class="h2 py-3" v-if="!loading">ETH Betting Table</h2>
 
@@ -134,6 +128,12 @@ export default {
       loading: true,
       Bet: null,
       WinningTeam:"",
+      quarterFinals1: [],
+      quarterFinals2: [],
+      quarterFinals3: [],
+      quarterFinals4: [],
+      quarterFinals5: [],
+      selectedTeams: [],
       selectedTeam: { name: "", betAmount: 0 },
       teams : [
     { id: "0", name: "Cloud9", betAmount: 0, time: "14:00" },
@@ -167,6 +167,34 @@ export default {
    
   },
   methods: {
+
+
+
+    selectTeam(team, bracketIndex) {
+      // Check if the provided bracketIndex is valid
+      if (bracketIndex < 1 || bracketIndex > 5) {
+        console.error("Invalid bracket index:", bracketIndex);
+        return;
+      }
+
+      // Determine the appropriate quarterFinals array based on the bracketIndex
+      const quarterFinalsArray = this[`quarterFinals${bracketIndex}`];
+
+      // Check if there's already a match in the last position of the selected bracket
+      const lastMatch = quarterFinalsArray[quarterFinalsArray.length - 1];
+      if (lastMatch && lastMatch.length === 2) {
+        return; // Exit early if a match is already complete
+      }
+
+      // Add the selected team to the selectedTeams array
+      this.selectedTeams.push(team);
+
+      // If two teams have been selected, add them to the quarterFinals array
+      if (this.selectedTeams.length === 2) {
+        quarterFinalsArray.push(this.selectedTeams);
+        this.selectedTeams = []; // Reset selectedTeams for the next match
+      }
+    },
 
 
     placeBet(team) {

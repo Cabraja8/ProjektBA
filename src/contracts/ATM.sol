@@ -31,7 +31,6 @@ contract ATM {
         balances[receiver] += amount;
     }
 
-    // In a Batch
 
     function transfer(address[] memory receivers, uint amount) public {
         require(balances[msg.sender] >= receivers.length * amount, "Insufficient funds");
