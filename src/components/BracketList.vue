@@ -15,18 +15,112 @@
       
       <div class="tournament-brackets">
         <ul class="bracket bracket-1">
-      <li class="team-item" v-for="(team, index) in teams.slice(0, 16)" :key="team.id" @click="selectTeam(team, 1)">
-        {{ team.name }} <time>{{ team.time }}</time> {{ teams[index + 1].name }}
-      </li>
-    </ul>
-    <ul class="bracket bracket-2">
-      <li class="team-item" v-for="(match, index) in quarterFinals1" :key="index">
-        <span v-for="team in match" :key="team.id">{{ team.name }} <time>20:00</time></span>
-      </li>
-    </ul>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(0, 0)">{{ teams[0].name }}</button>
+    <span v-else>{{ teams[0].name }}</span>
+    <time>14:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(1, 0)">{{ teams[1].name }}</button>
+    <span v-else>{{ teams[1].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(2, 1)">{{ teams[2].name }}</button>
+    <span v-else>{{ teams[2].name }}</span>
+    <time>16:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(3, 1)">{{ teams[3].name }}</button>
+    <span v-else>{{ teams[3].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(4, 0)">{{ teams[4].name }}</button>
+    <span v-else>{{ teams[4].name }}</span>
+    <time>16:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(5, 0)">{{ teams[5].name }}</button>
+    <span v-else>{{ teams[5].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(6, 1)">{{ teams[6].name }}</button>
+    <span v-else>{{ teams[6].name }}</span>
+    <time>17:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(7, 1)">{{ teams[7].name }}</button>
+    <span v-else>{{ teams[7].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(8, 0)">{{ teams[8].name }}</button>
+    <span v-else>{{ teams[8].name }}</span>
+    <time>20:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(9, 0)">{{ teams[9].name }}</button>
+    <span v-else>{{ teams[9].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(10, 1)">{{ teams[10].name }}</button>
+    <span v-else>{{ teams[10].name }}</span>
+    <time>21:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(11, 1)">{{ teams[11].name }}</button>
+    <span v-else>{{ teams[11].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(12, 0)">{{ teams[12].name }}</button>
+    <span v-else>{{ teams[12].name }}</span>
+    <time>22:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(13, 0)">{{ teams[13].name }}</button>
+    <span v-else>{{ teams[13].name }}</span>
+  </li>
+  <li class="team-item">
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(14, 1)">{{ teams[14].name }}</button>
+    <span v-else>{{ teams[14].name }}</span>
+    <time>23:00h</time>
+    <button v-if="IsOwner" class="btn-dark" @click="moveToBracket(15, 1)">{{ teams[15].name }}</button>
+    <span v-else>{{ teams[15].name }}</span>
+  </li>
+</ul>
+<ul class="bracket bracket-2">
+  <li class="team-item">
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(0, 0)">{{ bracket2Teams1[0] }} </button>
+    </template>
+    <span v-else>{{ bracket2Teams1[0] }}</span>
+    <time>20:00h</time>
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(1, 1)">{{ bracket2Teams1[1] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams1[1] }}</span>
+  </li>
+  <li class="team-item">
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(2, 0)">{{ bracket2Teams2[0] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams2[0] }}</span>
+    <time>20:00h</time>
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(3, 1)">{{ bracket2Teams2[1] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams2[1] }}</span>
+  </li>
+  <li class="team-item">
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(4, 0)">{{ bracket2Teams3[0] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams3[0] }}</span>
+    <time>20:00h</time>
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(5, 1)">{{ bracket2Teams3[1] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams3[1] }}</span>
+  </li>
+  <li class="team-item">
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(6, 0)">{{ bracket2Teams4[0] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams4[0] }}</span>
+    <time>20:00h</time>
+    <template v-if="IsOwner">
+      <button class="btn-dark" @click="moveToSemiBracket(7, 1)">{{ bracket2Teams4[1] }}</button>
+    </template>
+    <span v-else>{{ bracket2Teams4[1] }}</span>
+  </li>
+</ul> 
         <ul class="bracket bracket-3">
-          <li class="team-item">? <time>20:00</time> ?</li>
-          <li class="team-item">? <time>20:00</time> ?</li>
+          <li class="team-item">{{ bracket3Teams1[0] }} <time>20:00</time> >{{ bracket3Teams1[1]}}</li>
+          <li class="team-item">{{ bracket3Teams2[0] }} <time>20:00</time> >{{ bracket3Teams2[1]}}</li>
         </ul>  
         <ul class="bracket bracket-4">
           <li class="team-item">? <time>20:00</time> ?</li>
@@ -111,7 +205,7 @@
 </template>
 
 
-<script>
+<script >
 
 import Web3 from 'web3';
 import bet  from '@/abis/bet.json';
@@ -128,30 +222,31 @@ export default {
       loading: true,
       Bet: null,
       WinningTeam:"",
-      quarterFinals1: [],
-      quarterFinals2: [],
-      quarterFinals3: [],
-      quarterFinals4: [],
-      quarterFinals5: [],
       selectedTeams: [],
       selectedTeam: { name: "", betAmount: 0 },
+      bracket2Teams1: ['', ''],
+      bracket2Teams2: ['', ''],
+      bracket2Teams3: ['', ''],
+      bracket2Teams4: ['', ''],
+      bracket3Teams1: ['', ''],
+      bracket3Teams2: ['', ''],
       teams : [
-    { id: "0", name: "Cloud9", betAmount: 0, time: "14:00" },
-    { id: "1", name: "Fnatic", betAmount: 0, time: "14:00" },
-    { id: "2", name: "Rogue", betAmount: 0, time: "20:00" },
-    { id: "3", name: "G2 Esports", betAmount: 0, time: "20:00" },
-    { id: "4", name: "T1", betAmount: 0, time: "17:00" },
-    { id: "5", name: "Gen.G", betAmount: 0, time: "17:00" },
-    { id: "6", name: "DWG KIA", betAmount: 0, time: "20:00" },
-    { id: "7", name: "EDward Gaming", betAmount: 0, time: "20:00" },
+    { id: "0", name: "Cloud9", betAmount: 0 },
+    { id: "1", name: "Fnatic", betAmount: 0 },
+    { id: "2", name: "Rogue", betAmount: 0 },
+    { id: "3", name: "G2 Esports", betAmount: 0 },
+    { id: "4", name: "T1", betAmount: 0,},
+    { id: "5", name: "Gen.G", betAmount: 0 },
+    { id: "6", name: "DWG KIA", betAmount: 0, },
+    { id: "7", name: "EDward Gaming", betAmount: 0},
     { id: "8", name: "Team Liquid", betAmount: 0, time: "17:00" },
     { id: "9", name: "TSM", betAmount: 0, time: "17:00" },
-    { id: "10", name: "Invictus Gaming", betAmount: 0, time: "17:00" },
-    { id: "11", name: "Team WE", betAmount: 0, time: "17:00" },
-    { id: "12", name: "Misfits Gaming", betAmount: 0, time: "14:00" },
-    { id: "13", name: "Schalke 04 Esports", betAmount: 0, time: "14:00" },
-    { id: "14", name: "Origen", betAmount: 0, time: "20:00" },
-    { id: "15", name: "Vitality", betAmount: 0, time: "20:00" }
+    { id: "10", name: "Invictus Gaming", betAmount: 0 },
+    { id: "11", name: "Team WE", betAmount: 0 },
+    { id: "12", name: "Misfits Gaming", betAmount: 0 },
+    { id: "13", name: "Schalke 04 Esports", betAmount: 0 },
+    { id: "14", name: "Origen", betAmount: 0 },
+    { id: "15", name: "Vitality", betAmount: 0 }
 ]
     };
   },
@@ -166,37 +261,32 @@ export default {
   mounted(){
    
   },
+
   methods: {
-
-
-
-    selectTeam(team, bracketIndex) {
-      // Check if the provided bracketIndex is valid
-      if (bracketIndex < 1 || bracketIndex > 5) {
-        console.error("Invalid bracket index:", bracketIndex);
-        return;
+    moveToBracket(teamIndex,bracketIndex) {
+      
+      if(teamIndex >= 0 && teamIndex <= 3){
+        this.bracket2Teams1[bracketIndex] = this.teams[teamIndex].name;
+      }else if(teamIndex >= 4 && teamIndex <= 7){
+        this.bracket2Teams2[bracketIndex] = this.teams[teamIndex].name;
+      }else if(teamIndex >= 8 && teamIndex <= 11){
+        this.bracket2Teams3[bracketIndex] = this.teams[teamIndex].name;
+      }else if(teamIndex >= 12 && teamIndex <= 15){
+        this.bracket2Teams4[bracketIndex] = this.teams[teamIndex].name;
       }
 
-      // Determine the appropriate quarterFinals array based on the bracketIndex
-      const quarterFinalsArray = this[`quarterFinals${bracketIndex}`];
+      },
 
-      // Check if there's already a match in the last position of the selected bracket
-      const lastMatch = quarterFinalsArray[quarterFinalsArray.length - 1];
-      if (lastMatch && lastMatch.length === 2) {
-        return; // Exit early if a match is already complete
-      }
-
-      // Add the selected team to the selectedTeams array
-      this.selectedTeams.push(team);
-
-      // If two teams have been selected, add them to the quarterFinals array
-      if (this.selectedTeams.length === 2) {
-        quarterFinalsArray.push(this.selectedTeams);
-        this.selectedTeams = []; // Reset selectedTeams for the next match
-      }
-    },
+      moveToSemiBracket(teamIndex, bracketIndex) {
+  if (teamIndex >= 0 && teamIndex <= 3) {
+    this.bracket3Teams1[bracketIndex] = this.teams[teamIndex].name;
+  } else if (teamIndex >= 4 && teamIndex <= 7) {
+    this.bracket3Teams2[bracketIndex] = this.teams[teamIndex].name;
+  }
+},
 
 
+  
     placeBet(team) {
 
     // Perform actions when the bet is placed
