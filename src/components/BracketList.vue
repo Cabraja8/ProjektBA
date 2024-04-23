@@ -75,52 +75,52 @@
 <ul class="bracket bracket-2">
   <li class="team-item">
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(0, 0)">{{ bracket2Teams1[0] }} </button>
+      <button class="btn-dark" @click="moveToSemiBracket(0,bracket2Teams1[0], 0)">{{ bracket2Teams1[0] }} </button>
     </template>
     <span v-else>{{ bracket2Teams1[0] }}</span>
     <time>20:00h</time>
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(1, 1)">{{ bracket2Teams1[1] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(0,bracket2Teams1[0], 1)">{{ bracket2Teams1[0] }}</button>
     </template>
     <span v-else>{{ bracket2Teams1[1] }}</span>
   </li>
   <li class="team-item">
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(2, 0)">{{ bracket2Teams2[0] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(2,bracket2Teams1[1], 0)">{{ bracket2Teams1[1] }}</button>
     </template>
     <span v-else>{{ bracket2Teams2[0] }}</span>
     <time>20:00h</time>
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(3, 1)">{{ bracket2Teams2[1] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(3,bracket2Teams1[1], 1)">{{ bracket2Teams1[1] }}</button>
     </template>
     <span v-else>{{ bracket2Teams2[1] }}</span>
   </li>
   <li class="team-item">
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(4, 0)">{{ bracket2Teams3[0] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(4,bracket2Teams2[0], 0)">{{ bracket2Teams2[0] }}</button>
     </template>
     <span v-else>{{ bracket2Teams3[0] }}</span>
     <time>20:00h</time>
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(5, 1)">{{ bracket2Teams3[1] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(5,bracket2Teams2[0], 1)">{{ bracket2Teams2[1] }}</button>
     </template>
     <span v-else>{{ bracket2Teams3[1] }}</span>
   </li>
   <li class="team-item">
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(6, 0)">{{ bracket2Teams4[0] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(6,bracket2Teams2[1], 0)">{{ bracket2Teams4[0] }}</button>
     </template>
     <span v-else>{{ bracket2Teams4[0] }}</span>
     <time>20:00h</time>
     <template v-if="IsOwner">
-      <button class="btn-dark" @click="moveToSemiBracket(7, 1)">{{ bracket2Teams4[1] }}</button>
+      <button class="btn-dark" @click="moveToSemiBracket(7,bracket2Teams2[1], 1)">{{ bracket2Teams4[1] }}</button>
     </template>
     <span v-else>{{ bracket2Teams4[1] }}</span>
   </li>
 </ul> 
         <ul class="bracket bracket-3">
-          <li class="team-item">{{ bracket3Teams1[0] }} <time>20:00</time> >{{ bracket3Teams1[1]}}</li>
-          <li class="team-item">{{ bracket3Teams2[0] }} <time>20:00</time> >{{ bracket3Teams2[1]}}</li>
+          <li class="team-item">{{ bracket3Teams1[0] }} <time>20:00</time> {{ bracket3Teams1[1]}}</li>
+          <li class="team-item">{{ bracket3Teams2[0] }} <time>20:00</time> {{ bracket3Teams2[1]}}</li>
         </ul>  
         <ul class="bracket bracket-4">
           <li class="team-item">? <time>20:00</time> ?</li>
@@ -277,9 +277,13 @@ export default {
 
       },
 
-      moveToSemiBracket(teamIndex, bracketIndex) {
-  if (teamIndex >= 0 && teamIndex <= 3) {
+      moveToSemiBracket(teamIndex,teamName, bracketIndex) {
+
+      console.log(teamIndex);
+  if (teamIndex >= 0 && teamIndex <= 3 ) {
+    if(teamName == 'Cloud9' || teamName == 'Fnatic' || teamName =='Rogue' || teamName =='G2 Esports')
     this.bracket3Teams1[bracketIndex] = this.teams[teamIndex].name;
+
   } else if (teamIndex >= 4 && teamIndex <= 7) {
     this.bracket3Teams2[bracketIndex] = this.teams[teamIndex].name;
   }
@@ -289,7 +293,6 @@ export default {
   
     placeBet(team) {
 
-    // Perform actions when the bet is placed
     console.log(`Bet placed on ${team.name} for $${team.betAmount}`);
 
     const name = this.account;
