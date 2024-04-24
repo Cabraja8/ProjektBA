@@ -57,34 +57,35 @@
     </div>
     
     <footer>
-  <div class=" bg-dark px-5 py-4">
+  <div class="bg-dark px-5 py-4">
     <div class="container">
       <div class="row">
         <div class="col-md-4">
-          <h5 class="text-light">About Us</h5>
-          <p class="text-light">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam gravida magna nec metus posuere, sed ultricies justo sodales.</p>
+          <h5 class="text-light">About Esports Tournaments through Blockchain</h5>
+          <p class="text-light">Explore the exciting world of esports powered by blockchain technology. Join us as we revolutionize competitive gaming with transparency, security, and decentralization.</p>
         </div>
         <div class="col-md-4">
           <h5 class="text-light">Follow Us</h5>
           <ul class="social list-inline">
             <li class="list-inline-item">
-              <a href="https://www.facebook.com/" target="_blank" class="text-light"><i class="fab fa-facebook"></i></a>
+              <a href="https://www.facebook.com/" target="_blank" class="text-light"><i class="fab fa-facebook">FB</i></a>
             </li>
             <li class="list-inline-item">
-              <a href="https://www.instagram.com/" target="_blank" class="text-light"><i class="fab fa-instagram"></i></a>
+              <a href="https://www.instagram.com/" target="_blank" class="text-light"><i class="fab fa-instagram">I</i></a>
             </li>
             <li class="list-inline-item">
-              <a href="https://twitter.com/" target="_blank" class="text-light"><i class="fab fa-twitter"></i></a>
+              <a href="https://twitter.com/" target="_blank" class="text-light"><i class="fab fa-twitter">X</i></a>
             </li>
             <li class="list-inline-item">
-              <a href="https://www.youtube.com/" target="_blank" class="text-light"><i class="fab fa-youtube"></i></a>
+              <a href="https://www.youtube.com/" target="_blank" class="text-light"><i class="fab fa-youtube">YT</i></a>
             </li>
           </ul>
         </div>
         <div class="col-md-4">
-          <h5 class="text-light">Opening Hours</h5>
-          <p class="text-light">Monday - Friday: 07:00 AM - 11:00 PM</p>
-          <p class="text-light">Saturday - Sunday: 08:00 AM - 10:00 PM</p>
+          <h5 class="text-light">Contact Us</h5>
+          <p class="text-light">For inquiries and support, reach out to us:</p>
+          <p class="text-light">Email: contact@esportsblox.com</p>
+          <p class="text-light">Phone: +1 (123) 456-7890</p>
         </div>
       </div>
     </div>

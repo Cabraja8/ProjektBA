@@ -19,7 +19,7 @@
       <h2>Our Team</h2>
       <div class="row py-4">
         <div class="col-md-4">
-          <div class="card">
+          <div class="card border-greenC bg-dark text-white">
             <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">John Doe</h5>
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card">
+          <div class="card border-greenC bg-dark text-white">
             <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">Jane Smith</h5>
@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="col-md-4">
-          <div class="card">
+          <div class="card border-greenC bg-dark text-white">
             <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">Robert Johnson</h5>
