@@ -20,7 +20,7 @@
       <div class="row py-4">
         <div class="col-md-4">
           <div class="card border-greenC bg-dark text-white">
-            <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+            <img src="@/assets/photo4.jpg" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">John Doe</h5>
               <p class="card-text">CEO</p>
@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-4">
           <div class="card border-greenC bg-dark text-white">
-            <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+            <img src="@/assets/photo5.jpg" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">Jane Smith</h5>
               <p class="card-text">CTO</p>
@@ -38,7 +38,7 @@
         </div>
         <div class="col-md-4">
           <div class="card border-greenC bg-dark text-white">
-            <img src="https://via.placeholder.com/300" class="card-img-top" alt="Team Member">
+            <img src="@/assets/photo6.jpeg" class="card-img-top" alt="Team Member">
             <div class="card-body">
               <h5 class="card-title">Robert Johnson</h5>
               <p class="card-text">Lead Developer</p>

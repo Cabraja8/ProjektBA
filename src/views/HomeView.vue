@@ -9,13 +9,13 @@
       </ol>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <img class="d-block w-100" src="https://via.placeholder.com/800x400" alt="Esports">
+          <img class="d-block w-100" src="@/assets/esports.jpg" alt="Esports">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="https://via.placeholder.com/800x400" alt="Second slide">
+          <img class="d-block w-100" src="@/assets/esports1.webp" alt="Second slide">
         </div>
         <div class="carousel-item">
-          <img class="d-block w-100" src="https://via.placeholder.com/800x400" alt="Third slide">
+          <img class="d-block w-100" src="@/assets/esports3.jpg" alt="Third slide">
         </div>
       </div>
       <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
@@ -33,7 +33,7 @@
   <div class="row">
     <div class="col-md-4 mb-4">
       <div class="card border-greenC bg-dark text-white">
-        <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
+        <img class="card-img-top" src="@/assets/photo1.webp" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">Blockchain Transparency</h5>
           <p class="card-text">Experience transparent and tamper-proof betting transactions with blockchain technology, ensuring fairness and trust in every wager.</p>
@@ -42,7 +42,7 @@
     </div>
     <div class="col-md-4 mb-4">
       <div class="card border-greenC bg-dark text-white">
-        <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
+        <img class="card-img-top" src="@/assets/photo2.jpg" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">Secure Betting Platform</h5>
           <p class="card-text">Bet securely on esports tournaments with our blockchain-powered platform. Your funds and personal information are protected by advanced encryption.</p>
@@ -51,7 +51,7 @@
     </div>
     <div class="col-md-4 mb-4">
       <div class="card border-greenC bg-dark text-white">
-        <img class="card-img-top" src="https://via.placeholder.com/300" alt="Card image cap">
+        <img class="card-img-top" src="@/assets/photo3.webp" alt="Card image cap">
         <div class="card-body">
           <h5 class="card-title">Decentralized Betting</h5>
           <p class="card-text">Join the decentralized revolution in esports betting. With blockchain technology, betting is decentralized, ensuring autonomy and independence for all participants.</p>
@@ -63,7 +63,7 @@
 
     <!-- Services Section -->
     <div class="container mt-5">
-  <h2>Our Betting Services</h2>
+  <h2 class="h2 py-3">Our Betting Services</h2>
   <div class="row">
     <div class="col-md-4">
       <div class="card">
